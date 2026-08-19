@@ -19,9 +19,10 @@ A Foundry VTT module (compatible with v14+) for the automatic and random generat
 4. Launch your world and enable the module in the "Manage Modules" menu.
 
 ### Manual Installation (Alternative)
-1. Copy the `dnd-npc-randomizer` directory into your Foundry VTT `Data/modules/` folder.
-2. Restart Foundry VTT.
-3. Enable the module in the "Manage Modules" menu of your world.
+1. Create a new folder named exactly `dnd-npc-randomizer` inside your Foundry VTT `Data/modules/` directory.
+2. Extract/copy all the downloaded contents from GitHub directly into this newly created folder.
+3. Restart Foundry VTT.
+4. Enable the module in the "Manage Modules" menu of your world.
 
 ## Usage
 
