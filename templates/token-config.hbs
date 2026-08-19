@@ -1,0 +1,11 @@
+<div class="form-group dnd-npc-randomizer-group">
+    <label>Name Randomizer</label>
+    <div class="form-fields">
+        <select name="flags.dnd-npc-randomizer.nameRollTable">
+            <option value="">-- None --</option>
+            {{#each tables as |table|}}
+                <option value="{{table.id}}" {{#if table.selected}}selected{{/if}}>{{table.name}}</option>
+            {{/each}}
+        </select>
+    </div>
+</div>
