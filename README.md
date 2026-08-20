@@ -1,6 +1,6 @@
 # DnD NPC Randomizer
 
-A Foundry VTT module (compatible with v14+) for the automatic and random generation of NPC names and the dynamic assignment of portraits for the D&D 5e system. Ideal for Game Masters who want to quickly drag and drop individual NPCs onto the map with fitting names and portraits.
+A Foundry VTT module (compatible with v13+) for the automatic and random generation of NPC names and the dynamic assignment of portraits for the D&D 5e system. Ideal for Game Masters who want to quickly drag and drop individual NPCs onto the map with fitting names and portraits.
 
 ## Features
 
