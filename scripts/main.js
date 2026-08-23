@@ -238,29 +238,19 @@ Hooks.on("createToken", async (token, options, userId) => {
     let newImg = undefined;
     let newName = undefined;
 
-    // Feature A: Portrait Image Matching (Suffix _Portrait in a relative "Portraits" folder)
+    // Feature A: Portrait Image Matching (Parallel "Portraits" folder, exact same filename)
     const currentImg = token.texture?.src || token._source?.texture?.src;
-    if (currentImg) {
-        const lastSlashIndex = currentImg.lastIndexOf("/");
-        const lastDotIndex = currentImg.lastIndexOf(".");
+    if (currentImg && currentImg.includes("/Tokens/")) {
+        const expectedPortraitPath = currentImg.replace("/Tokens/", "/Portraits/");
 
-        if (lastSlashIndex >= 0 && lastDotIndex > lastSlashIndex) {
-            const folderPath = currentImg.substring(0, lastSlashIndex);
-            const fileName = currentImg.substring(lastSlashIndex + 1, lastDotIndex);
-            const ext = currentImg.substring(lastDotIndex);
-
-            // Expected portrait path: [folder]/Portraits/[filename]_Portrait[ext]
-            const expectedPortraitPath = `${folderPath}/Portraits/${fileName}_Portrait${ext}`;
-
-            try {
-                // Perform a fast HEAD request to check if the file actually exists on the server
-                const response = await fetch(expectedPortraitPath, { method: "HEAD" });
-                if (response.ok) {
-                    newImg = expectedPortraitPath;
-                }
-            } catch (error) {
-                console.warn("dnd-npc-randomizer | Could not verify portrait image:", error);
+        try {
+            // Perform a fast HEAD request to check if the file actually exists on the server
+            const response = await fetch(expectedPortraitPath, { method: "HEAD" });
+            if (response.ok) {
+                newImg = expectedPortraitPath;
             }
+        } catch (error) {
+            console.warn("dnd-npc-randomizer | Could not verify portrait image:", error);
         }
     }
 

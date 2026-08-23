@@ -1,11 +1,11 @@
 # DnD NPC Randomizer
 
-A Foundry VTT module (compatible with v13+) for the automatic and random generation of NPC names and the dynamic assignment of portraits for the D&D 5e system. Ideal for Game Masters who want to quickly drag and drop individual NPCs onto the map with fitting names and portraits.
+A Foundry VTT module (compatible with v14+) for the automatic and random generation of NPC names and the dynamic assignment of portraits for the D&D 5e system. Ideal for Game Masters who want to quickly drag and drop individual NPCs onto the map with fitting names and portraits.
 
 ## Features
 
 * **Random Names via RollTables**: Assign a RollTable to an NPC's prototype token. As soon as the NPC is dragged onto the scene (as an "unlinked" token), a name is automatically rolled from the table and assigned.
-* **Automatic Portrait**: When a token is dragged onto the map, the module searches for a corresponding portrait image. For example, if your token image is located at `Images/Goblins/Goblin_01.png`, the module checks if an image exists at `Images/Goblins/Portraits/Goblin_01_Portrait.png` and automatically sets this as the character portrait in the actor sheet, without changing the token image on the map.
+* **Automatic Portrait**: When a token is dragged onto the map, the module searches for a corresponding portrait image in a parallel `Portraits` folder. For example, if your token image is located at `Images/Tokens/Goblin_01.png`, the module checks if an image with the exact same name exists at `Images/Portraits/Goblin_01.png` and automatically sets this as the character portrait in the actor sheet, without changing the token image on the map.
 * **Dynamic Token Settings**: In the Token settings (under the "Identity" tab), the module adds a dropdown menu where you can directly select the desired name table for this NPC.
 * **Smart Linking**: The module is explicitly designed for unlinked tokens. As soon as "Link Actor Data" is activated in the token settings, the name assignment is automatically disabled.
 * **Included Default Content**: Default name tables (Human, Dwarf, Elf, etc.) can be generated via the module settings, and a compendium of pre-made NPCs can be imported directly into the game world.
@@ -50,4 +50,4 @@ In the game settings, under the **Module Settings** tab, you will find two speci
 ## Notes
 
 * This module is specifically designed for the **D&D 5e** system (although the main features could potentially work in other systems, provided they use the same standard token structures).
-* **Portrait Folder Structure**: For the automatic portrait feature to work, you must structure your image files properly. Example: A token image located at `Images/Goblins/Goblin_01.png` requires a portrait image located at `Images/Goblins/Portraits/Goblin_01_Portrait.png`.
+* **Portrait Folder Structure**: For the automatic portrait feature to work, you must structure your image files into parallel folders named `Tokens` and `Portraits`. The filename must be identical in both folders. Example: A token image located at `.../Tokens/Goblin_01.png` requires a portrait image located at `.../Portraits/Goblin_01.png`.
