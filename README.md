@@ -8,7 +8,8 @@ A Foundry VTT module (compatible with v14+) for the automatic and random generat
 * **Automatic Portrait**: When a token is dragged onto the map, the module searches for a corresponding portrait image in a parallel `Portraits` folder. For example, if your token image is located at `Images/Tokens/Goblin_01.png`, the module checks if an image with the exact same name exists at `Images/Portraits/Goblin_01.png` and automatically sets this as the character portrait in the actor sheet, without changing the token image on the map.
 * **Dynamic Token Settings**: In the Token settings (under the "Identity" tab), the module adds a dropdown menu where you can directly select the desired name table for this NPC.
 * **Smart Linking**: The module is explicitly designed for unlinked tokens. As soon as "Link Actor Data" is activated in the token settings, the name assignment is automatically disabled.
-* **Included Default Content**: Default name tables (Human, Dwarf, Elf, etc.) can be generated via the module settings, and a compendium of pre-made NPCs can be imported directly into the game world.
+* **Copy to Actor Sidebar**: Turn any dynamically rolled scene NPC into a permanent, linked world actor with a single click. In the sheet's header controls menu, click "Copy to Actor Sidebar" to create a permanent sidebar actor with "Link Actor Data" enabled, link the placed scene token directly to it (sharing the exact same UUID), and preserve its current rolled token image.
+* **Included Default Content**: Default name tables (Human, Dwarf, Elf, Tiefling, etc.) can be generated via the module settings, and a rich compendium of over 400 pre-made NPCs organized into categories (*Townsfolk*, *Guards & Warriors*, *Spellcasters & Faith*, *Cultists*) can be imported directly into the game world.
 
 ## Installation
 
@@ -34,7 +35,7 @@ As soon as the module is activated for the first time (or manually via the modul
 1. Open the character sheet of any actor and go to the **Prototype Token** settings.
 2. Ensure that **Link Actor Data** is *not* activated.
 3. Under the **Identity** tab, you will find the new dropdown menu for the **NPC Name Randomizer**.
-4. Select one of the tables (e.g., "Human - Male") and click Save.
+4. Select one of the tables (e.g., "Human - Male", "Tiefling - Female") and click Save.
 
 ### 3. Dragging to the Scene
 Drag the configured actor from the sidebar onto the scene.
@@ -42,10 +43,20 @@ Drag the configured actor from the sidebar onto the scene.
 * At the same time, the module will search for a corresponding portrait for this token (as described under Features) and assign it as the image in the character sheet.
 * The Game Master receives a short UI notification about the newly assigned name.
 
-### 4. Module Settings & Compendium
+### 4. Saving Scene NPCs to Sidebar ("Copy to Actor Sidebar")
+When a randomly generated scene token becomes an important or recurring NPC:
+1. Open the character sheet of the token on the map.
+2. Click the window controls menu in the sheet header (where *Configure Sheet*, *Configure Ownership*, etc. are located).
+3. Select **"Copy to Actor Sidebar"** at the bottom of the menu.
+4. The actor is copied into your world's Actor Sidebar with **Link Actor Data** activated and its current rolled token texture preserved.
+5. The placed token on the scene is automatically linked to this new world actor, sharing the exact same UUID so HP and stat changes synchronize across map and sheet.
+6. If an actor with that name already exists in the sidebar, `(Copy)` is automatically appended.
+7. The character sheet closes automatically after copying.
+
+### 5. Module Settings & Compendium
 In the game settings, under the **Module Settings** tab, you will find two specific sections for the *DnD NPC Randomizer*:
 * **Generate Default Tables**: Contains the "Import RollTables" button, which checks the table folder and restores any accidentally deleted default tables.
-* **Generate Default NPCs**: Contains the "Import NPCs" button, which imports the included pre-made NPCs from the module's compendium, along with their pre-configured folder structure, into your active world.
+* **Generate Default NPCs**: Contains the "Import NPCs" button, which imports the included pre-made NPCs from the module's compendium (*Lidarion - Random NPCs*), along with their hierarchical folder structure, into your active world.
 
 ## Notes
 
