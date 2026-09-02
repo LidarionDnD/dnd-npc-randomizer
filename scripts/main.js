@@ -312,3 +312,127 @@ Hooks.on("createToken", async (token, options, userId) => {
         }
     }
 });
+
+/**
+ * Copies an actor (particularly a placed synthetic token actor) to the World Actor Sidebar.
+ * If an actor with the same name already exists in the sidebar, appends a (Copy) suffix.
+ * Automatically closes the character sheet once copied.
+ * 
+ * @param {Actor} actor - The Actor document to copy.
+ * @param {Application} [app] - The open application / character sheet to close.
+ * @returns {Promise<Actor>} The newly created World Actor.
+ */
+export async function copyActorToSidebar(actor, app) {
+    if (!actor) return;
+    if (!game.user.can("ACTOR_CREATE")) {
+        ui.notifications.warn("You do not have permission to create Actors.");
+        return;
+    }
+
+    const baseName = actor.name || "New Actor";
+    let targetName = baseName;
+
+    // If an actor with this name already exists in the World Actor collection, append (Copy)
+    if (game.actors.some(a => a.name === targetName)) {
+        const copyOf = game.i18n.format("DOCUMENT.CopyOf", { name: targetName }) || `${targetName} (Copy)`;
+        targetName = copyOf;
+        while (game.actors.some(a => a.name === targetName)) {
+            targetName = game.i18n.format("DOCUMENT.CopyOf", { name: targetName }) || `${targetName} (Copy)`;
+        }
+    }
+
+    // Export actor data and strip database ID
+    const actorData = actor.toObject();
+    delete actorData._id;
+    actorData.name = targetName;
+
+    actorData.prototypeToken = actorData.prototypeToken || {};
+    actorData.prototypeToken.actorLink = true;
+
+    // For token actors: bake in the current token appearance and prevent re-randomization
+    if (actor.isToken || actor.token) {
+        actorData.prototypeToken.name = targetName;
+        if (actor.token?.texture?.src) {
+            actorData.prototypeToken.texture = actorData.prototypeToken.texture || {};
+            actorData.prototypeToken.texture.src = actor.token.texture.src;
+        }
+        actorData.prototypeToken.randomImg = false;
+        // Clear nameRollTable so dragging this specific actor doesn't overwrite its name
+        foundry.utils.setProperty(actorData, "prototypeToken.flags.dnd-npc-randomizer.nameRollTable", "");
+    }
+
+    // Keep folder if valid world folder, otherwise place at root
+    if (actorData.folder && !game.folders.has(actorData.folder)) {
+        actorData.folder = null;
+    }
+
+    try {
+        const created = await Actor.create(actorData);
+
+        // If this actor was on the scene, link the placed token to the new World Actor
+        const tokenDoc = actor.isToken ? (actor.token || actor.parent) : null;
+        if (tokenDoc && typeof tokenDoc.update === "function") {
+            const tokenUpdates = {
+                actorId: created.id,
+                actorLink: true,
+                name: created.name
+            };
+            if (tokenDoc.texture?.src) {
+                tokenUpdates["texture.src"] = tokenDoc.texture.src;
+            }
+            await tokenDoc.update(tokenUpdates);
+        }
+
+        // Automatically close the character sheet
+        if (app && typeof app.close === "function") {
+            await app.close({ submit: false });
+        }
+        if (actor.apps) {
+            for (const openApp of Object.values(actor.apps)) {
+                if (openApp !== app && typeof openApp.close === "function") {
+                    await openApp.close({ submit: false });
+                }
+            }
+        }
+
+        ui.notifications.info(`NPC Randomizer: "${created.name}" copied to Actor Sidebar.`);
+        return created;
+    } catch (err) {
+        console.error("dnd-npc-randomizer | Failed to copy actor to sidebar:", err);
+        ui.notifications.error(`Failed to copy actor: ${err.message}`);
+    }
+}
+
+// ApplicationV2 Header Controls (Foundry v12 / v13 / v14)
+Hooks.on("getHeaderControlsApplicationV2", (app, controls) => {
+    const actor = app.actor || app.document;
+    if (!actor || actor.documentName !== "Actor") return;
+    if (controls.some(c => c.action === "copyToActorSidebar")) return;
+
+    controls.push({
+        icon: "fa-solid fa-user-plus",
+        label: "Copy to Actor Sidebar",
+        action: "copyToActorSidebar",
+        visible: () => game.user.can("ACTOR_CREATE"),
+        onClick: () => copyActorToSidebar(actor, app)
+    });
+
+    if (app.options?.actions) {
+        app.options.actions.copyToActorSidebar = () => copyActorToSidebar(actor, app);
+    }
+});
+
+// ApplicationV1 Header Buttons (Fallback for legacy sheets)
+Hooks.on("getActorSheetHeaderButtons", (app, buttons) => {
+    const actor = app.actor || app.document || app.object;
+    if (!actor) return;
+    if (buttons.some(b => b.class === "copy-to-actor-sidebar")) return;
+
+    buttons.push({
+        label: "Copy to Actor Sidebar",
+        class: "copy-to-actor-sidebar",
+        icon: "fas fa-user-plus",
+        onclick: () => copyActorToSidebar(actor, app)
+    });
+});
+

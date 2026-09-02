@@ -68,7 +68,8 @@ export class NPCRandomizerSettings {
         const defaultTables = [
             "Human - Male", "Human - Female",
             "Dwarf - Male", "Dwarf - Female",
-            "Elves - Male", "Elves - Female"
+            "Elves - Male", "Elves - Female",
+            "Tiefling - Male", "Tiefling - Female"
         ];
 
         for (const tableName of defaultTables) {
